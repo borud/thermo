@@ -180,9 +180,12 @@ void setup() {
 void loop() {
     // Read thermometer
     ds18x20.requestTemperatures();
-    temperature = smooth(ds18x20.getTempC(thermometer));
+    float raw_temp = ds18x20.getTempC(thermometer);
+    temperature = smooth(raw_temp);
 
-    Serial.print("Temperature: ");
+    Serial.print("raw / smooth : ");
+    Serial.print(raw_temp);
+    Serial.print(" / ");
     Serial.println(temperature);
 
     display_temperature(temperature);
