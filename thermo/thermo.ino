@@ -1,10 +1,22 @@
 /*
  * Software for collecting and displaying temperature data.
  *
+ * This is mainly a platform that I use for experimenting with
+ * temperature sensors. As such this doesn't really represent a
+ * finished product of any sort.  The code is mainly made available in
+ * case it might be useful for other people.
+ *
+ * - borud@borud.org
+ *
  */
+
+#include <SPI.h>
+#include <WiFi.h>
 #include <DallasTemperature.h>
 #include <LedControl.h>
 #include <OneWire.h>
+
+#include "wifi_pass.h"
 
 // Serial speed
 #define SERIAL_SPEED 9600
@@ -12,8 +24,8 @@
 // Configure which pins the MAX7219 is connected to.
 //
 #define MAX7219_LOAD       10
-#define MAX7219_CLK        11
-#define MAX7219_DATA_INPUT 12
+#define MAX7219_CLK         9
+#define MAX7219_DATA_INPUT  8
 
 // Thermometer
 #define THERMOMETER_PIN              2
@@ -54,9 +66,14 @@ static LedControl lc = LedControl(MAX7219_DATA_INPUT, MAX7219_CLK, MAX7219_LOAD,
 static OneWire onewire(THERMOMETER_PIN);
 static DallasTemperature ds18x20(&onewire);
 static DeviceAddress thermometer;
-
-static float temperature = 0.0;
 static char buffer[10];
+
+// Wifi variables
+static char ssid[] = WIFI_SSID;
+static char pass[] = WIFI_PASS;
+
+static int status = WL_IDLE_STATUS;
+
 
 /**
  * Convert float to string.  Very limited funcitonality.  Just make
@@ -143,6 +160,30 @@ float smooth(float temp) {
     return (sum / (float)count);
 }
 
+
+/**
+ * Connect to WiFi network.
+ *
+ * @return {@code true} if we succeeded in connecting, and
+ *   {@code false} otherwise.
+ *
+ */
+bool connect_to_wifi() {
+    Serial.println("Initializing wifi");
+    status = WiFi.begin(ssid, pass);
+
+    if (status != WL_CONNECTED) {
+        Serial.print("Unable to connect to ");
+        Serial.println(ssid);
+        return false;
+    }
+
+    Serial.println("Connected to ");
+    Serial.print(ssid);
+    return true;
+}
+
+
 /**
  * Initialize the display.  Puts it in power-save mode to avoid
  * display flickering and displaying nonsense during startup.  Then
@@ -172,6 +213,9 @@ void setup() {
   }
 
   ds18x20.setResolution(thermometer, THERMOMETER_RESOLUTION_BITS);
+
+  // Try to connect to wifi
+  connect_to_wifi();
 }
 
 /**
@@ -181,7 +225,7 @@ void loop() {
     // Read thermometer
     ds18x20.requestTemperatures();
     float raw_temp = ds18x20.getTempC(thermometer);
-    temperature = smooth(raw_temp);
+    float temperature = smooth(raw_temp);
 
     Serial.print("raw / smooth : ");
     Serial.print(raw_temp);
