@@ -9,14 +9,14 @@
  * - borud@borud.org
  *
  */
-
-#include <SPI.h>
-#include <WiFi.h>
 #include <DallasTemperature.h>
 #include <LedControl.h>
 #include <OneWire.h>
 
-#include "wifi_pass.h"
+// Kludge: This needs to be here in order to trick the IDE to update
+// includepath for build process.
+#include <WiFi.h>
+#include "networking.h"
 
 // Serial speed
 #define SERIAL_SPEED 9600
@@ -35,7 +35,7 @@
 #define MAX7219_NUM_DEVICES 1
 
 // The display number
-#define DISPLAY             0
+#define LED_DISPLAY             0
 
 // Parameters to the shutdown command
 #define POWER_DOWN true
@@ -66,13 +66,8 @@ static LedControl lc = LedControl(MAX7219_DATA_INPUT, MAX7219_CLK, MAX7219_LOAD,
 static OneWire onewire(THERMOMETER_PIN);
 static DallasTemperature ds18x20(&onewire);
 static DeviceAddress thermometer;
+
 static char buffer[10];
-
-// Wifi variables
-static char ssid[] = WIFI_SSID;
-static char pass[] = WIFI_PASS;
-
-static int status = WL_IDLE_STATUS;
 
 
 /**
@@ -84,7 +79,6 @@ void floatToString(float f, char buffer[]) {
     // Minimum width 5, 2 digits after decimal point.
     dtostrf((double)f, 5, 2, buffer);
 }
-
 
 /**
  * Print thermometer address.
@@ -119,21 +113,21 @@ void display_temperature(float temp) {
     }
     
     floatToString(temp, buffer);
-    lc.setChar(DISPLAY,1, buffer[0], DECIMAL_DOT_OFF);
-    lc.setChar(DISPLAY,2, buffer[1], DECIMAL_DOT_ON);
-    lc.setChar(DISPLAY,3, buffer[3], DECIMAL_DOT_OFF);
-    lc.setChar(DISPLAY,4, buffer[4], DECIMAL_DOT_OFF);
+    lc.setChar(LED_DISPLAY,1, buffer[0], DECIMAL_DOT_OFF);
+    lc.setChar(LED_DISPLAY,2, buffer[1], DECIMAL_DOT_ON);
+    lc.setChar(LED_DISPLAY,3, buffer[3], DECIMAL_DOT_OFF);
+    lc.setChar(LED_DISPLAY,4, buffer[4], DECIMAL_DOT_OFF);
 }
 
 void display_error(int err) {
-    lc.setChar(DISPLAY,1, 'E', DECIMAL_DOT_OFF);
-    lc.setChar(DISPLAY,2, '-', DECIMAL_DOT_OFF);
+    lc.setChar(LED_DISPLAY,1, 'E', DECIMAL_DOT_OFF);
+    lc.setChar(LED_DISPLAY,2, '-', DECIMAL_DOT_OFF);
     if (err < 10) {
-        lc.setChar(DISPLAY,3, '0', DECIMAL_DOT_OFF);
-        lc.setChar(DISPLAY,4, err, DECIMAL_DOT_OFF);
+        lc.setChar(LED_DISPLAY,3, '0', DECIMAL_DOT_OFF);
+        lc.setChar(LED_DISPLAY,4, err, DECIMAL_DOT_OFF);
         return;
     }
-    lc.setChar(DISPLAY, 3, err, DECIMAL_DOT_OFF);
+    lc.setChar(LED_DISPLAY, 3, err, DECIMAL_DOT_OFF);
 }
 
 /**
@@ -161,28 +155,6 @@ float smooth(float temp) {
 }
 
 
-/**
- * Connect to WiFi network.
- *
- * @return {@code true} if we succeeded in connecting, and
- *   {@code false} otherwise.
- *
- */
-bool connect_to_wifi() {
-    Serial.println("Initializing wifi");
-    status = WiFi.begin(ssid, pass);
-
-    if (status != WL_CONNECTED) {
-        Serial.print("Unable to connect to ");
-        Serial.println(ssid);
-        return false;
-    }
-
-    Serial.println("Connected to ");
-    Serial.print(ssid);
-    return true;
-}
-
 
 /**
  * Initialize the display.  Puts it in power-save mode to avoid
@@ -193,9 +165,9 @@ bool connect_to_wifi() {
 void setup() {
   // Initialize the display first so we turn it off before we start doing 
   // anything else.
-  lc.shutdown(DISPLAY, POWER_SAVE);
-  lc.setIntensity(DISPLAY, intensity);
-  lc.clearDisplay(DISPLAY);
+  lc.shutdown(LED_DISPLAY, POWER_SAVE);
+  lc.setIntensity(LED_DISPLAY, intensity);
+  lc.clearDisplay(LED_DISPLAY);
   
   // Initialize serial interface.
   Serial.begin(SERIAL_SPEED);
@@ -211,7 +183,6 @@ void setup() {
       Serial.println("Unable to find temperature sensor");
       display_error(ERR_NO_TEMPERATURE_SENSOR);
   }
-
   ds18x20.setResolution(thermometer, THERMOMETER_RESOLUTION_BITS);
 
   // Try to connect to wifi
