@@ -20,7 +20,7 @@ static char pass[] = WIFI_PASS;
 static int status = WL_IDLE_STATUS;
 
 bool connect_to_wifi() {
-    int retry = 0;
+    byte retry = 0;
 
     Serial.println("[WIFI] Initializing...");
     while (retry < WIFI_MAX_RETRY) {
