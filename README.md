@@ -19,7 +19,7 @@ To use this software you need the following hardware:
 
   - 4-digit, 8-segment LED display from SparkFun
   - Maxim MAX7219 LED driver
-  - Dallas DS18B20 digital temperature sensor
+  - Dallas DS18B20 digital temperature sensors
   - Arduino Uno
 
 You will also need a few resistors and capacitors.
@@ -34,6 +34,7 @@ The following libraries are used by this software
   - OneWire library
   - DallasTemperature
   - LedControl
+  - WiFi
   
 I suggest you get the latest versions of everything since having older
 versions of some libraries may result in compile-time errors that may
@@ -42,8 +43,6 @@ be confusing.
 
 ## Possible future enhancements.
 
-  - Multi-sensor support so that I can monitor multiple temperature
-    sensors.
   - Networking in order to log sensor to some service capable of
     recording timeseries (there are several).
   - Low-power features to run this system off a battery so I can use

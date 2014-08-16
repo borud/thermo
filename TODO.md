@@ -1,6 +1,6 @@
 # TODO
 
-- Add support for multiple temperature sensors.
+- ~~Add support for multiple temperature sensors.~~ **implemented**
 
 - Add support for logging to Xively or similar service.
 
@@ -8,4 +8,3 @@
   temperature sensor (cable pulled etc)
 
 - Add offline logging
-
