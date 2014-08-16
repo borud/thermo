@@ -4,10 +4,21 @@
 #include "thermo_config.h"
 #include "thermo_display.h"
 
-// DS18x20 digital thermometer chip
-static OneWire onewire(THERMOMETER_PIN);
+static OneWire onewire(SENSOR_PIN);
 static DallasTemperature ds18x20(&onewire);
-static DeviceAddress thermometer;
+static DeviceAddress sensor_addr[SENSOR_MAX_NUMBER];
+
+/**
+ * Just halt processing.  Should move this to a shared file since it
+ * is useful.  The idea is that if we call sleep we might burn less
+ * power?  Needs to be checked.
+ */
+void halt_execution(byte code) {
+    display_msg(PREFIX_ERR, code);
+    while(true) {
+        delay(60000);
+    }
+}
 
 /**
  * Print thermometer address.
@@ -23,20 +34,52 @@ void print_address(DeviceAddress deviceAddress)
 }
 
 void sensor_init() {
-    Serial.println("Looking for temperature sensor");
     ds18x20.begin();
     Serial.print("Found ");
     Serial.print(ds18x20.getDeviceCount(), DEC);
-    Serial.println(" devices.");
-        
-    if (!ds18x20.getAddress(thermometer, 0)) {
-        Serial.println("Unable to find temperature sensor");
-        display_msg(PREFIX_ERR, ERR_NO_TEMPERATURE_SENSOR);
+    Serial.println(" DS18x20 device(s).");
+
+    // Look up all sensors and record address in sensor_addr array
+    // for later use.
+    for (byte i = 0; i < ds18x20.getDeviceCount(); i++) {
+        if (!ds18x20.getAddress(sensor_addr[i], i)) {
+            // For some reason this failed.  Sleep endlessly.
+            display_msg(PREFIX_ERR, ERR_NO_TEMPERATURE_SENSOR);
+            while(true) {
+                delay(60000);
+            }
+        }
+
+        // Set the resolution
+        ds18x20.setResolution(sensor_addr[i], SENSOR_RESULTION_BITS);
+
+        Serial.print(" - sensor ");
+        Serial.print(i);
+        Serial.print(" : ");
+        print_address(sensor_addr[i]);
+        Serial.println();
     }
-    ds18x20.setResolution(thermometer, THERMOMETER_RESOLUTION_BITS);
 }
 
-float get_temperature_celsius() {
+void sensor_request_temperatures() {
     ds18x20.requestTemperatures();
-    return ds18x20.getTempC(thermometer);
+}
+
+float sensor_get_celsius(byte index) {
+    // If the index is out of bounds we pretend it was disconnected.
+    if (index > ds18x20.getDeviceCount()) {
+        halt_execution(ERR_SENSOR_INDEX_OUT_OF_BOUNDS);
+    }
+    return ds18x20.getTempC(sensor_addr[index]);
+}
+
+DeviceAddress* sensor_get_address(byte index) {
+    if (index > ds18x20.getDeviceCount()) {
+        halt_execution(ERR_SENSOR_INDEX_OUT_OF_BOUNDS);
+    }
+    return &sensor_addr[index];
+}
+
+byte sensor_count() {
+    return ds18x20.getDeviceCount();
 }

@@ -6,7 +6,11 @@
  * finished product of any sort.  The code is mainly made available in
  * case it might be useful for other people.
  *
- * - borud@borud.org
+ * IMPORTANT: to configure parameters such as pins used on the Arduino
+ *   etc. you have to look in the "thermo_config.h" file.  This is
+ *   where all global configuration is located.
+ *
+ * - Bjorn Borud, borud (at) borud.org
  *
  */
 
@@ -17,34 +21,25 @@
 #include <LedControl.h>
 #include <WiFi.h>
 
-// Project headers
+// Project headers.
 #include "networking.h"
 #include "thermo_config.h"
 #include "thermo_display.h"
 #include "thermo_sensor.h"
 
+// Array used for rudimentary smoothing.
+float smoothed_values[SENSOR_MAX_NUMBER];
+
 /**
- * Very simple smoothing function.
+ * Just prepopulate the array with the current temperature of each
+ * sensor so that we don't have to wait for a long ramp-up.  Measured
+ * values are better guesses than...well, guesses.
  */
-float smooth(float temp) {
-    static float readings[SMOOTHING_SIZE];
-    static byte offset = 0;
-    static byte count = 0;
-
-    readings[offset] = temp;
-    offset++;
-    offset = offset % SMOOTHING_SIZE;
-
-    // Only increment until smoothing array is filled.
-    if (count < SMOOTHING_SIZE) {
-        count++;
+void smoothing_init() {
+    sensor_request_temperatures();
+    for (byte i = 0; i < sensor_count(); i++) {
+        smoothed_values[i] = sensor_get_celsius(i);
     }
-
-    float sum = 0.0;
-    for (byte i = 0; i < count ; i++) {
-        sum += readings[i];
-    }
-    return (sum / (float)count);
 }
 
 /**
@@ -64,10 +59,13 @@ void setup() {
     // Initial scan for DS18x20 sensors.
     display_msg(PREFIX_BOOT, BOOT_TEMP_SENSOR_SCAN);
     sensor_init();
+    smoothing_init();
 
+#ifdef ENABLE_WIFI
     // Try to connect to wifi
     display_msg(PREFIX_BOOT, BOOT_CONNECT_WIFI);
     connect_to_wifi();
+#endif
 
     // Boot sequence done
     display_msg(PREFIX_BOOT, BOOT_FINISHED);
@@ -77,14 +75,30 @@ void setup() {
  * Main loop.
  */
 void loop() {
-    // Read thermometer
-    float raw_temp = get_temperature_celsius();
-    float temperature = smooth(raw_temp);
+    // Request temperature readings then loop through the sensors.
+    sensor_request_temperatures();
+    for (byte i = 0; i < sensor_count(); i++) {
+        DeviceAddress *address;
+        float temp = sensor_get_celsius(i);
 
-    // Print raw and smooted temperature
-    Serial.print(raw_temp);
-    Serial.print(", ");
-    Serial.println(temperature);
+        // Giving the measured value a weight of 1/4 seems like a good
+        // tradeoff between speed and useful smoothness.
+        smoothed_values[i] = (((smoothed_values[i] * 300.0) + (temp * 100.0)) / 400.0);
 
-    display_temperature(temperature);
+        // Does nothing for now.  Just a placeholder for when we start
+        // logging.  The idea is to include the sensor address in the
+        // logs so I can track individual sensors.  That way I can
+        // mark them and I don't have to configure anything -- I can just find the
+        // sensor ID in the logs.
+        address = sensor_get_address(i);
+
+        Serial.print(temp);
+        Serial.print(", ");
+        Serial.print(smoothed_values[i]);
+        Serial.print(", ");
+    }
+    Serial.println(0);
+
+    // Just display the first sensor for now.
+    display_temperature(smoothed_values[0]);
 }
