@@ -56,11 +56,35 @@ sensors that might be more suitable do not hesitate to drop me a line.
 I'd love for something that can sample faster and provide higher
 accuracy.
 
-## Error reporting
+## Display status codes
+
+### Boot sequence
+
+  - **b-01** - Boot-time sensor scan.  Looks for sensors connected to
+    the OneWire bus.
+  - **b-02** - Connecting to WiFi.
+  - **b-99** - Boot finished.  (Normally just a brief flash).
+
+### Errors
 
 The following error codes may be displayed:
 
-  - **E-01** - No temperature sensor or sensor has been unplugged
+  - **E-01** - No temperature sensor or sensor has been unplugged.
 
-- **E-02** - Negative temperature (*display only supports positive
-    temperatures up to 99.99 degrees Celsius*)
+  - **E-02** - Negative temperature (*display only supports positive
+    temperatures up to 99.99 degrees Celsius.  May also be indicative
+    of sensors being unplugged.*).
+
+  - **E-20** - Sensor index out of bounds.  Indicates a programming
+    error.
+
+## Useful links
+
+### Dallas DS18B20 temperature sensor
+
+  - http://www.milesburton.com/Dallas_Temperature_Control_Library
+
+### Maxim MAX7219 Led display driver
+  - http://playground.arduino.cc/Main/MAX72XXHardware
+  - http://tronixstuff.com/2013/10/11/tutorial-arduino-max7219-led-display-driver-ic/
+
