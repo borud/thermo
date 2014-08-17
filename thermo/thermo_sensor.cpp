@@ -43,11 +43,8 @@ void sensor_init() {
     // for later use.
     for (byte i = 0; i < ds18x20.getDeviceCount(); i++) {
         if (!ds18x20.getAddress(sensor_addr[i], i)) {
-            // For some reason this failed.  Sleep endlessly.
-            display_msg(PREFIX_ERR, ERR_NO_TEMPERATURE_SENSOR);
-            while(true) {
-                delay(60000);
-            }
+            // For some reason this failed.  Halt execution.
+	  halt_execution(ERR_NO_TEMPERATURE_SENSOR);
         }
 
         // Set the resolution
