@@ -15,4 +15,15 @@ void halt_execution(uint8_t code);
  */
 void reboot();
 
+/**
+ * Estimate how much free memory there is.
+ */
+int free_memory();
+
+/**
+ * Output amount of free memory to serial port.  Assumes serial port
+ * has been initialized.
+ */
+void print_free_memory();
+
 #endif
