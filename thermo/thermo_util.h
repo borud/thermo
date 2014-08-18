@@ -9,4 +9,10 @@
  */
 void halt_execution(uint8_t code);
 
+/**
+ * Reboot the board.  Experimental.  I have no idea how this really
+ * works.  Assumes you do not have any working watchdog timers.
+ */
+void reboot();
+
 #endif

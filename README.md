@@ -13,6 +13,31 @@ please feel free to clone the project on Github.  That way I can
 perhaps learn something from you and you can contribute features that
 I might include in my version.
 
+## How to get this to work
+
+### `private.h`
+
+There's a header file called `private.h` which you will notice is
+missing from this project.  This is because this is where private
+information such as WiFi ssid and password is stored as well as Xively
+credentials.
+
+I've provided a file named `private_template.h` which you should copy
+to `private.h` and then edit that.  __Take care not to check
+`private.h` into any public repositories, or your WiFi and Xively
+credentials will become public__.
+
+### `thermo_config.h`
+
+This file contains a bunch of configuration settings and a few useful
+global definitions.  Have a look at it.  In particular you will need
+to modify this if you want to add more sensors than the default max
+number (3 sensors).
+
+(If you add more sensors you'll have to look at the code in
+`thermo_xively.cpp` as well.  There's a terribly stupid hack there to
+define feeds, and if you need more feeds you need to edit this)
+
 ## Hardware.
 
 To use this software you need the following hardware:
@@ -74,8 +99,18 @@ The following error codes may be displayed:
     temperatures up to 99.99 degrees Celsius.  May also be indicative
     of sensors being unplugged.*).
 
+  - **E-03** - Getting DS18x20 sensor address failed.
+
   - **E-20** - Sensor index out of bounds.  Indicates a programming
-    error.
+    error in `thermo_sensor.cpp`
+
+  - **E-21** - Sensor index out of bounds. Indicates a programming
+    error in `thermo_xively.cpp`.
+
+### Reboot
+
+  - **P-01** - No temperature sensors connected.  Keeps rebooting
+    every 2 seconds until one is connected.
 
 ## Useful links
 

@@ -11,6 +11,8 @@
 // wifi network before giving up.
 #define WIFI_MAX_RETRY 4
 
+#define WIFI_RETRY_DELAY 2000
+
 // Wifi variables - you need to add a wifi_pass.h file where you
 // define WIFI_SSID and WIFI_PASS.  This is so you won't have to
 // check this file in and reveal your password.
@@ -35,6 +37,7 @@ bool connect_to_wifi() {
             Serial.print(ssid);
             Serial.println(" trying again");
             retry++;
+            delay(WIFI_RETRY_DELAY);
         }
 
         Serial.print("[WIFI] Connected to ");

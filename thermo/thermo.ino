@@ -28,9 +28,14 @@
 #include "thermo_config.h"
 #include "thermo_display.h"
 #include "thermo_sensor.h"
+#include "thermo_xively.h"
+#include "thermo_util.h"
 
 // Array used for rudimentary smoothing.
-float smoothed_values[SENSOR_MAX_NUMBER];
+static float smoothed_values[SENSOR_MAX_NUMBER];
+
+// Time for last data push
+static unsigned long last_data_push = 0;
 
 /**
  * Just prepopulate the array with the current temperature of each
@@ -63,11 +68,12 @@ void setup() {
     sensor_init();
     smoothing_init();
 
-#ifdef ENABLE_WIFI
     // Try to connect to wifi
     display_msg(PREFIX_BOOT, BOOT_CONNECT_WIFI);
     connect_to_wifi();
-#endif
+
+    // Initialize xively
+    xively_init(sensor_count());
 
     // Boot sequence done
     display_msg(PREFIX_BOOT, BOOT_FINISHED);
@@ -87,13 +93,8 @@ void loop() {
         // tradeoff between speed and useful smoothness.
         smoothed_values[i] = (((smoothed_values[i] * 300.0) + (temp * 100.0)) / 400.0);
 
-        // Does nothing for now.  Just a placeholder for when we start
-        // logging.  The idea is to include the sensor address in the
-        // logs so I can track individual sensors.  That way I can
-        // mark them and I don't have to configure anything -- I can just find the
-        // sensor ID in the logs.
-        address = sensor_get_address(i);
-
+        xively_update_value(i, smoothed_values[i]);
+        
         Serial.print(temp);
         Serial.print(", ");
         Serial.print(smoothed_values[i]);
@@ -103,4 +104,13 @@ void loop() {
 
     // Display only first sensor
     display_temperature(smoothed_values[0]);
+
+    // Push data
+    {
+        unsigned long now = millis();
+        if ((now - last_data_push) > XIVELY_UPDATE_DELAY_MILLIS) {
+            xively_push();
+            last_data_push = now;
+        }
+    }
 }

@@ -3,10 +3,13 @@
 
 // Determine whether or not we want to enable Wifi.  Turning this off
 // is useful for development since connecting to Wifi is slow.
-#undef ENABLE_WIFI
+#define ENABLE_WIFI
 
 // Serial speed
 #define SERIAL_SPEED 9600
+
+// Milliseconds between each time we push data to Xively
+#define XIVELY_UPDATE_DELAY_MILLIS 60000
 
 // Configure which pins the MAX7219 is connected to.
 //
@@ -39,15 +42,18 @@
 
 // =============== not configurable ====================
 
-// Error codes
-#define ERR_NO_TEMPERATURE_SENSOR        1
-#define ERR_NEGATIVE_TEMPERATURE         2
-#define ERR_SENSOR_INDEX_OUT_OF_BOUNDS  20
-
 // Prefixes for use in thermo_display.cpp : display_msg()
 #define PREFIX_ERR    'E'
 #define PREFIX_BOOT   'b'
-#define PREFIX_HALT   'h'
+#define PREFIX_HALT   'H'
+#define PREFIX_REBOOT 'P'
+
+// Error codes
+#define ERR_NO_TEMPERATURE_SENSOR               1
+#define ERR_NEGATIVE_TEMPERATURE                2
+#define ERR_GET_SENSOR_ADDRESS_FAILED           3
+#define ERR_SENSOR_INDEX_OUT_OF_BOUNDS         20
+#define ERR_SENSOR_INDEX_OUT_OF_BOUNDS_XIVELY  21
 
 // Boot sequence codes
 #define BOOT_TEMP_SENSOR_SCAN   1

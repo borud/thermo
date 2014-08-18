@@ -1,6 +1,8 @@
 #ifndef THERMO_SENSOR_H
 #define THERMO_SENSOR_H
 
+#include <DallasTemperature.h>
+
 /**
  * Initialize DS18x20 temperature sensor.
  */
@@ -19,16 +21,27 @@ void sensor_request_temperatures();
  * @param index the index of the sensor to be read.  Starts with 0.
  * @return the temperature in celsius
  */
-float sensor_get_celsius(byte index);
+float sensor_get_celsius(uint8_t index);
 
 /**
  * Get a pointer to the address of sensor at index {@code index}.
  */
-DeviceAddress* sensor_get_address(byte index);
+DeviceAddress* sensor_get_address(uint8_t index);
 
 /**
  * Get number of connected sensors.
  */
-byte sensor_count();
+uint8_t sensor_count();
+
+/**
+ * Get sensor name.  String containing hexadecimal address
+ * representation.
+ */
+char* sensor_get_name(uint8_t index);
+
+/**
+ * Get all sensor names.
+ */
+char** sensor_get_names();
 
 #endif
