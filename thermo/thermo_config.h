@@ -47,7 +47,7 @@
 // Prefixes for use in thermo_display.cpp : display_msg()
 #define PREFIX_ERR    'E'
 #define PREFIX_BOOT   'b'
-#define PREFIX_SENSOR 'L'
+#define PREFIX_HALT   'h'
 
 // Boot sequence codes
 #define BOOT_TEMP_SENSOR_SCAN   1

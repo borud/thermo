@@ -1,6 +1,7 @@
 #include <LedControl.h>
 #include "thermo_config.h"
 #include "thermo_display.h"
+#include "thermo_util.h"
 
 // Parameters to the shutdown command
 #define POWER_DOWN true
@@ -38,9 +39,8 @@ void display_temperature(float temp) {
     // Sensor returns 0.0 if unplugged.  Can use this float
     // representation to check for this case.
     if (temp == 0.0) {
-        display_msg(PREFIX_ERR, ERR_NO_TEMPERATURE_SENSOR);
         Serial.println("Sensor unplugged");
-        return;
+        halt_execution(ERR_NO_TEMPERATURE_SENSOR);
     }
     
     float_to_string(temp, buffer);
@@ -50,7 +50,7 @@ void display_temperature(float temp) {
     lc.setChar(LED_DISPLAY,4, buffer[4], DECIMAL_DOT_OFF);
 }
 
-void display_msg(char prefix, byte code) {
+void display_msg(char prefix, uint8_t code) {
     lc.setChar(LED_DISPLAY,1, prefix, DECIMAL_DOT_OFF);
     lc.setChar(LED_DISPLAY,2, '-', DECIMAL_DOT_OFF);
     if (code < 10) {
@@ -59,8 +59,8 @@ void display_msg(char prefix, byte code) {
         return;
     }
     {
-        byte first  = code/10;
-        byte second = code - (first * 10);
+        uint8_t first  = code/10;
+        uint8_t second = code - (first * 10);
         lc.setChar(LED_DISPLAY, 3, first, DECIMAL_DOT_OFF);
         lc.setChar(LED_DISPLAY, 4, second, DECIMAL_DOT_OFF);
     }

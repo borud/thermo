@@ -1,5 +1,3 @@
-#include "wifi_pass.h"
-
 /**
  * Connect to WiFi network.
  *

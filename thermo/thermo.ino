@@ -20,9 +20,11 @@
 #include <OneWire.h>
 #include <LedControl.h>
 #include <WiFi.h>
+#include <HttpClient.h>
+#include <Xively.h>
 
 // Project headers.
-#include "networking.h"
+#include "thermo_wifi.h"
 #include "thermo_config.h"
 #include "thermo_display.h"
 #include "thermo_sensor.h"

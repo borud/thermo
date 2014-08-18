@@ -1,24 +1,13 @@
 #include <DallasTemperature.h>
 #include <OneWire.h>
-#include "thermo_sensor.h"
 #include "thermo_config.h"
+#include "thermo_util.h"
+#include "thermo_sensor.h"
 #include "thermo_display.h"
 
 static OneWire onewire(SENSOR_PIN);
 static DallasTemperature ds18x20(&onewire);
 static DeviceAddress sensor_addr[SENSOR_MAX_NUMBER];
-
-/**
- * Just halt processing.  Should move this to a shared file since it
- * is useful.  The idea is that if we call sleep we might burn less
- * power?  Needs to be checked.
- */
-void halt_execution(byte code) {
-    display_msg(PREFIX_ERR, code);
-    while(true) {
-        delay(60000);
-    }
-}
 
 /**
  * Print thermometer address.

@@ -3,7 +3,9 @@
  *
  */
 #include <WiFi.h>
-#include "networking.h"
+#include "thermo_util.h"
+#include "thermo_wifi.h"
+#include "private.h"
 
 // Max number of times to retry conneciton to
 // wifi network before giving up.

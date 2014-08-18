@@ -15,7 +15,7 @@ void display_temperature(float temp);
  *   'A','b','c','d','E','F','H','L','P',
  * @param code a numeric code between 0 and 99.
  */
-void display_msg(char prefix, byte code);
+void display_msg(char prefix, uint8_t code);
 
 /**
  * Initialize display.  This sets the display in power save mode,
