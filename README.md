@@ -3,6 +3,12 @@
 __*This is a work in progress so some of the code might be messy or
   unclear.*__
 
+__For some reason the Xively and WiFi code will not play nice with
+newer versions of the Arduino IDE.  Version 1.0.5 does *NOT* work,
+while 1.0.2 appears to work.  Have not investigated why.  If you know
+why and feel like contributing, please fork the project and send me a
+pull-request.__
+
 The goal of this project is to learn about measuring body temperature,
 so the software will implement whatever I need to experiment with
 this.  The goal isn't necessarily to produce a polished product at the
