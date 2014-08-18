@@ -45,8 +45,9 @@
 #define ERR_SENSOR_INDEX_OUT_OF_BOUNDS  20
 
 // Prefixes for use in thermo_display.cpp : display_msg()
-#define PREFIX_ERR  'E'
-#define PREFIX_BOOT 'b'
+#define PREFIX_ERR    'E'
+#define PREFIX_BOOT   'b'
+#define PREFIX_SENSOR 'L'
 
 // Boot sequence codes
 #define BOOT_TEMP_SENSOR_SCAN   1

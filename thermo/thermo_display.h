@@ -23,4 +23,9 @@ void display_msg(char prefix, byte code);
  */
 void display_init();
 
+/**
+ * Clear display
+ */
+void display_clear();
+
 #endif

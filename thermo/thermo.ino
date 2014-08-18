@@ -99,6 +99,6 @@ void loop() {
     }
     Serial.println(0);
 
-    // Just display the first sensor for now.
+    // Display only first sensor
     display_temperature(smoothed_values[0]);
 }

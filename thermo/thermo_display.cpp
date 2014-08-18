@@ -66,10 +66,12 @@ void display_msg(char prefix, byte code) {
     }
 }
 
+void display_clear() {
+    lc.shutdown(LED_DISPLAY, POWER_SAVE);
+    lc.clearDisplay(LED_DISPLAY);
+}
+
 void display_init() {
-  // Initialize the display first so we turn it off before we start doing 
-  // anything else.
-  lc.shutdown(LED_DISPLAY, POWER_SAVE);
-  lc.setIntensity(LED_DISPLAY, DEFAULT_INTENSITY);
-  lc.clearDisplay(LED_DISPLAY);
+    display_clear();
+    lc.setIntensity(LED_DISPLAY, DEFAULT_INTENSITY);
 }

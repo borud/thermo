@@ -25,12 +25,14 @@ void halt_execution(byte code) {
  */
 void print_address(DeviceAddress deviceAddress)
 {
-  for (uint8_t i = 0; i < 8; i++)
-  {
-    // zero pad the address if necessary
-    if (deviceAddress[i] < 16) Serial.print("0");
-    Serial.print(deviceAddress[i], HEX);
-  }
+    for (uint8_t i = 0; i < 8; i++) {
+        // zero pad the address if necessary
+        if (deviceAddress[i] < 16) Serial.print("0");
+        Serial.print(deviceAddress[i], HEX);
+        if (i < 7 && ((i & 0x01) == 1)) {
+            Serial.print("-");
+        }
+    }
 }
 
 void sensor_init() {
