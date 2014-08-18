@@ -56,6 +56,7 @@ void smoothing_init() {
  * in a known state when starting.
  */
 void setup() {
+    delay(2000);
     // initialize display before we do anything to avoid flicker and
     // nonsense.
     display_init();

@@ -55,6 +55,7 @@
 #define ERR_SENSOR_INDEX_OUT_OF_BOUNDS         20
 #define ERR_SENSOR_INDEX_OUT_OF_BOUNDS_XIVELY  21
 #define ERR_NO_WIFI_SHIELD                     30
+#define ERR_NO_WIFI_NETWORKS                   31
 
 // Boot sequence codes
 #define BOOT_TEMP_SENSOR_SCAN  10
