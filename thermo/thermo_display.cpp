@@ -39,7 +39,7 @@ void display_temperature(float temp) {
     // Sensor returns 0.0 if unplugged.  Can use this float
     // representation to check for this case.
     if (temp == 0.0) {
-        Serial.println("Sensor unplugged");
+        Serial.println(F("Sensor unplugged"));
         halt_execution(ERR_NO_TEMPERATURE_SENSOR);
     }
     

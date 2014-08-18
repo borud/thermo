@@ -5,6 +5,8 @@
 #include <WiFi.h>
 #include "thermo_util.h"
 #include "thermo_wifi.h"
+#include "thermo_config.h"
+#include "thermo_display.h"
 #include "private.h"
 
 // Max number of times to retry conneciton to
@@ -26,25 +28,32 @@ static int status = WL_IDLE_STATUS;
 bool connect_to_wifi() {
     byte retry = 0;
 
-    Serial.println("[WIFI] Initializing...");
+    // Make sure we have a wifi shield
+    if (WiFi.status() == WL_NO_SHIELD) {
+        Serial.println(F("No wifi shield detected"));
+        halt_execution(ERR_NO_WIFI_SHIELD);
+    }
+    display_msg(PREFIX_BOOT, BOOT_FOUND_WIFI_SHIELD);
+    
+    Serial.println(F("[WIFI] Initializing..."));
     while (retry < WIFI_MAX_RETRY) {
-        Serial.print("[WIFI] attempt ");
+        Serial.print(F("[WIFI] attempt "));
         Serial.println(retry + 1);
 
         status = WiFi.begin(ssid, pass);
         if (status != WL_CONNECTED) {
-            Serial.print("[WIFI] Unable to connect to ");
+            Serial.print(F("[WIFI] Unable to connect to "));
             Serial.print(ssid);
-            Serial.println(" trying again");
+            Serial.println(F(" trying again"));
             retry++;
             delay(WIFI_RETRY_DELAY);
         }
 
-        Serial.print("[WIFI] Connected to ");
+        Serial.print(F("[WIFI] Connected to "));
         Serial.println(ssid);
         return true;
     }
 
-    Serial.println("[WIFI] Giving up");
+    Serial.println(F("[WIFI] Giving up"));
     return false;
 }

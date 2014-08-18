@@ -96,9 +96,9 @@ void loop() {
         xively_update_value(i, smoothed_values[i]);
         
         Serial.print(temp);
-        Serial.print(", ");
+        Serial.print(',');
         Serial.print(smoothed_values[i]);
-        Serial.print(", ");
+        Serial.print(',');
     }
     Serial.println(0);
 

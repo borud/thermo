@@ -6,4 +6,3 @@ void xively_update_value(uint8_t sensor, float value);
 void xively_push();
 
 #endif
-

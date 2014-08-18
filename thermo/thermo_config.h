@@ -54,10 +54,12 @@
 #define ERR_GET_SENSOR_ADDRESS_FAILED           3
 #define ERR_SENSOR_INDEX_OUT_OF_BOUNDS         20
 #define ERR_SENSOR_INDEX_OUT_OF_BOUNDS_XIVELY  21
+#define ERR_NO_WIFI_SHIELD                     30
 
 // Boot sequence codes
-#define BOOT_TEMP_SENSOR_SCAN   1
-#define BOOT_CONNECT_WIFI       2
+#define BOOT_TEMP_SENSOR_SCAN  10
+#define BOOT_CONNECT_WIFI      20
+#define BOOT_FOUND_WIFI_SHIELD 21
 #define BOOT_FINISHED          99
 
 #endif

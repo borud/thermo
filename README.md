@@ -90,9 +90,10 @@ accuracy.
 
 ### Boot sequence
 
-  - **b-01** - Boot-time sensor scan.  Looks for sensors connected to
+  - **b-10** - Boot-time sensor scan.  Looks for sensors connected to
     the OneWire bus.
-  - **b-02** - Connecting to WiFi.
+  - **b-20** - Connecting to WiFi.
+  - **b-21** - Found WiFi shield.
   - **b-99** - Boot finished.  (Normally just a brief flash).
 
 ### Errors

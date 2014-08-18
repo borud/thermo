@@ -54,6 +54,6 @@ void xively_update_value(uint8_t sensor, float value) {
 
 void xively_push() {
     int ret = xivelyclient.put(feed, xivelyKey);
-    Serial.print("[xivelyclient.put] res = ");
+    Serial.print(F("[xivelyclient.put] res = "));
     Serial.println(ret);
 }

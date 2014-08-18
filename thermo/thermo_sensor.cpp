@@ -14,14 +14,14 @@ void sensor_init() {
     memset(sensor_str, 0, sizeof(sensor_str));
 
     ds18x20.begin();
-    Serial.print("Found ");
+    Serial.print(F("Found "));
     Serial.print(ds18x20.getDeviceCount(), DEC);
-    Serial.println(" DS18x20 device(s).");
+    Serial.println(F(" DS18x20 device(s)."));
 
     // If there are no temperature sensors connected we reboot until
     // at least one is connected.
     if (ds18x20.getDeviceCount() == 0) {
-        display_msg(PREFIX_HALT, ERR_NO_TEMPERATURE_SENSOR);
+        display_msg(PREFIX_REBOOT, ERR_NO_TEMPERATURE_SENSOR);
         delay(2000);
         display_clear();
         reboot();
