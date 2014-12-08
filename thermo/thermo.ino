@@ -24,8 +24,8 @@
 #include <Xively.h>
 
 // Project headers.
-#include "thermo_wifi.h"
 #include "thermo_config.h"
+#include "thermo_wifi.h"
 #include "thermo_display.h"
 #include "thermo_sensor.h"
 #include "thermo_xively.h"
@@ -87,7 +87,6 @@ void loop() {
     // Request temperature readings then loop through the sensors.
     sensor_request_temperatures();
     for (byte i = 0; i < sensor_count(); i++) {
-        DeviceAddress *address;
         float temp = sensor_get_celsius(i);
 
         // Giving the measured value a weight of 1/4 seems like a good
@@ -103,8 +102,14 @@ void loop() {
     }
     Serial.println(0);
 
-    // Display only first sensor
-    display_temperature(smoothed_values[0]);
+    // Show the maximum temperature measured.
+    float max_value = smoothed_values[0];
+    for (int i = 1; i < SENSOR_MAX_NUMBER; i++) {
+        if (smoothed_values[i] > max_value) {
+            max_value = smoothed_values[i];
+        }
+    }
+    display_temperature(max_value);
 
     // Push data
     {
