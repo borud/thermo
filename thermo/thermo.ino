@@ -13,6 +13,7 @@
  * - Bjorn Borud, borud (at) borud.org
  *
  */
+#define THERMO_VERSION 2
 
 // Kludge: This needs to be here in order to trick the IDE to update
 // includepath for build process.
@@ -56,11 +57,13 @@ void smoothing_init() {
  * in a known state when starting.
  */
 void setup() {
-    delay(2000);
+    delay(500);
     // initialize display before we do anything to avoid flicker and
     // nonsense.
     display_init();
-    
+    display_msg(PREFIX_VERSION, THERMO_VERSION);
+    delay(1500);
+        
     // Initialize serial interface.
     Serial.begin(SERIAL_SPEED);
     

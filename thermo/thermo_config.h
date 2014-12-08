@@ -43,10 +43,11 @@
 // =============== not configurable ====================
 
 // Prefixes for use in thermo_display.cpp : display_msg()
-#define PREFIX_ERR    'E'
-#define PREFIX_BOOT   'b'
-#define PREFIX_HALT   'H'
-#define PREFIX_REBOOT 'P'
+#define PREFIX_ERR     'E'
+#define PREFIX_BOOT    'b'
+#define PREFIX_HALT    'H'
+#define PREFIX_REBOOT  'P'
+#define PREFIX_VERSION 'L'
 
 // Error codes
 #define ERR_NO_TEMPERATURE_SENSOR               1
