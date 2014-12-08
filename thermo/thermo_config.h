@@ -33,7 +33,7 @@
 #define LED_DISPLAY 0
 
 // Defaults
-#define DEFAULT_INTENSITY 4
+#define DEFAULT_INTENSITY 1
 
 // How many samples do we perform smoothing over?  Higher number of
 // samples results in slower response to change.
