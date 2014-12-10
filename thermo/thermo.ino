@@ -6,6 +6,10 @@
  * finished product of any sort.  The code is mainly made available in
  * case it might be useful for other people.
  *
+ * IMPORTANt: Something about the WiFi shield and/or library is broken
+ *   in versions of the Arduino IDE newer that 1.0.4.  If you use a newer
+ *   version of the IDE this sketch might not work at all.
+ *
  * IMPORTANT: to configure parameters such as pins used on the Arduino
  *   etc. you have to look in the "thermo_config.h" file.  This is
  *   where all global configuration is located.
@@ -81,6 +85,9 @@ void setup() {
 
     // Boot sequence done
     display_msg(PREFIX_BOOT, BOOT_FINISHED);
+
+    // Make sure we push data immediately for easier debugging.
+    last_data_push = millis() - XIVELY_UPDATE_DELAY_MILLIS;
 }
 
 /**

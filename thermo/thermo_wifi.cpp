@@ -51,6 +51,10 @@ bool connect_to_wifi() {
 
         Serial.print(F("[WIFI] Connected to "));
         Serial.println(ssid);
+        IPAddress localIp = WiFi.localIP();
+        Serial.print(F("[WIFI]   - IP: "));
+        Serial.println(localIp);
+
         return true;
     }
 
